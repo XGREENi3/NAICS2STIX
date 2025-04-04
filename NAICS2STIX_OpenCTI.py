@@ -37,7 +37,7 @@ def in_naics_range(subsector_code, sector_code):
 
 def main():
     # Load the Excel file
-    file_path = "Inputs/2022-NAICS-Codes-listed-numerically-2-Digit-through-6-Digit.xlsx"  # Your specific file path
+    file_path = "Inputs/2022-NAICS-Codes-listed-numerically-2-Digit-through-6-Digit.xlsx"  
     excel_data = pd.ExcelFile(file_path)
     two_digit_naics_df = pd.read_excel(excel_data, sheet_name='Two Digit NAICS')
     three_digit_naics_df = pd.read_excel(excel_data, sheet_name='Three Digit NAICS')
@@ -55,16 +55,16 @@ def main():
     subsectors = []
     relationships = []
     for index, row in three_digit_naics_df.iterrows():
-        naics_code = str(row['2022 NAICS US   Code'])  # Ensure the NAICS code is a string
-        title = row['2022 NAICS US Title'].strip()  # Only strip unnecessary whitespace, not "T"
+        naics_code = str(row['2022 NAICS US   Code']) 
+        title = row['2022 NAICS US Title'].strip()  
         description = row['Description']
         subsector = create_identity(naics_code, title, description)
         subsectors.append(subsector)
 
-        # Identify the parent sector, handle ranges like '31-33'
+        # Identify the parent sector
         parent_sector = None
         for sector_code, sector_obj in sectors.items():
-            if in_naics_range(naics_code[:2], sector_code):  # Check if subsector falls within a range
+            if in_naics_range(naics_code[:2], sector_code): 
                 parent_sector = sector_obj
                 break
 
@@ -81,7 +81,7 @@ def main():
             obj['x_opencti_aliases'] = [f"naics-{obj['labels'][0].split('-')[-1]}"]
             obj['x_opencti_type'] = "Sector"
 
-    output_file_path = 'Outputs\\naics_stix_bundle.json'  # Your specific output path
+    output_file_path = 'Outputs\\naics_stix_bundle.json' 
 
     with open(output_file_path, 'w') as file:
         json.dump(stix_json, file, indent=4)
